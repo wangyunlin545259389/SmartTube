@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lb_search_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:clipChildren="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:descendantFocusability="afterDescendants">
+
+    <!-- 顶部 Header -->
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="28dp"
+        android:focusable="false"
+        android:clipChildren="false">
+
+        <!-- 左侧 Logo + App 名称 -->
+        <LinearLayout
+            android:id="@+id/app_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:focusable="false">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/text_white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- 中间搜索框 -->
+        <LinearLayout
+            android:id="@+id/search_box"
+            android:layout_width="420dp"
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="4dp"
+            android:background="@drawable/bg_header_search_box"
+            android:clipToPadding="false"
+            android:focusable="false"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:descendantFocusability="afterDescendants">
+
+            <ImageView
+                android:id="@+id/ic_search_left"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_header_search"
+                app:tint="#C8CDF5"
+                android:focusable="false" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/transparent"
+                android:text="lady gaga"
+                android:hint="Search songs..."
+                android:textColor="@color/text_white"
+                android:textColorHint="#8D91B9"
+                android:textSize="16sp"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:padding="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_header_search_button"
+                android:src="@drawable/ic_header_search"
+                android:tint="@color/text_white"
+                android:scaleType="center"
+                android:padding="9dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <!-- 右侧状态栏：WiFi / 设置 / 时间 -->
+        <LinearLayout
+            android:id="@+id/header_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:focusable="false">
+
+            <ImageButton
+                android:id="@+id/btn_header_wifi"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_header_icon_button"
+                android:src="@drawable/ic_header_wifi"
+                android:tint="@color/text_white"
+                android:padding="8dp"
+                android:scaleType="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:clickable="true" />
+
+            <ImageButton
+                android:id="@+id/btn_header_settings"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_header_icon_button"
+                android:src="@drawable/ic_header_settings"
+                android:tint="@color/text_white"
+                android:padding="8dp"
+                android:scaleType="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:clickable="true" />
+
+            <TextView
+                android:id="@+id/tv_header_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:text="20:30"
+                android:textColor="@color/text_white"
+                android:textSize="20sp"
+                android:fontFamily="sans"
+                android:focusable="false" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 中间内容区：左右分栏 -->
+    <LinearLayout
+        android:id="@+id/content_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="156dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:padding="6dp"
+        android:focusable="false">
+
+        <!-- 左侧：视频播放区 + 悬浮播放信息 -->
+        <FrameLayout
+            android:id="@+id/left_video_panel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_gradient_dark_blue"
+            android:padding="2dp"
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
+            android:descendantFocusability="afterDescendants">
+
+            <!-- 视频播放区 -->
+            <FrameLayout
+                android:id="@+id/ktv_video_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:clipChildren="true"
+                android:clipToPadding="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:descendantFocusability="afterDescendants">
+                <LinearLayout
+                    android:id="@+id/ktv_player_loading_overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:background="#99000000"
+                    android:visibility="gone"
+                    android:clickable="false"
+                    android:focusable="false">
+
+                    <ProgressBar
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:indeterminate="true" />
+
+                    <TextView
+                        android:id="@+id/tv_ktv_player_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Loading songs…"
+                        android:textColor="@color/text_white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btn_video_fullscreen"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_video_fullscreen_button"
+                    android:src="@drawable/ic_fullscreen"
+                    android:tint="@color/text_white"
+                    android:padding="10dp"
+                    android:scaleType="center"
+                    android:elevation="12dp"
+                    android:translationZ="12dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true" />
+
+            </FrameLayout>
+            <!--            <View-->
+            <!--                android:id="@+id/video_touch_blocker"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:background="@android:color/transparent"-->
+            <!--                android:focusable="false"-->
+            <!--                android:focusableInTouchMode="false"-->
+            <!--                android:clickable="false" />-->
+            <!-- 顶部悬浮播放信息：Now Playing 和 Next 同一行显示 -->
+            <LinearLayout
+                android:id="@+id/video_info_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_margin="1dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_video_info_overlay"
+                android:paddingStart="4dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="5dp"
+                android:focusable="false"
+                android:clickable="false">
+
+                <TextView
+                    android:id="@+id/tv_now_playing_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="2dp"
+                    android:text="No song selected"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:focusable="false" />
+
+                <TextView
+                    android:id="@+id/tv_next_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text=""
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:focusable="false" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <!-- 搜索结果列表 -->
+        <FrameLayout
+            android:id="@+id/song_result_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:focusable="false">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/song_result_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="1dp"
+                android:clipToPadding="false"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:descendantFocusability="afterDescendants" />
+
+            <LinearLayout
+                android:id="@+id/empty_list_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="#22000000"
+                android:visibility="gone"
+                android:clickable="false"
+                android:focusable="false">
+
+                <TextView
+                    android:id="@+id/tv_empty_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The current list is empty..."
+                    android:textColor="@color/text_white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:alpha="0.88" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/search_loading_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="#66000000"
+                android:visibility="gone"
+                android:clickable="false"
+                android:focusable="false">
+
+                <ProgressBar
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:indeterminate="true" />
+
+                <TextView
+                    android:id="@+id/tv_search_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Searching for songs…"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- 底部控制栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_controls"
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:background="#151335"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:focusable="false">
+
+        <!-- 1. 分类按钮行 (修改后) -->
+        <!-- 需求：左右边距，左图右文 -->
+        <LinearLayout
+            android:id="@+id/category_layout"
+            android:layout_width="match_parent"
+            android:weightSum="5"
+            android:layout_height="86dp"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:gravity="center_vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:focusable="false">
+
+            <!-- Karaoke 按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_karaoke"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:minHeight="64dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="KARAOKE"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:strokeColor="@color/primary_purple"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_microphone"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_white"
+                app:iconSize="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true" />
+
+            <!-- All 按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_all"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:minHeight="64dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="All"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:strokeColor="@color/primary_purple"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_all"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_white"
+                app:iconSize="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true"/>
+
+
+            <!-- Official 按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_official"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:minHeight="64dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Official Music"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:strokeColor="@color/primary_purple"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_official_music"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_white"
+                app:iconSize="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true" />
+
+
+            <!-- Remix 按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_remix"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:minHeight="64dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Remix"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:strokeColor="@color/primary_purple"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_remix"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_white"
+                app:iconSize="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true" />
+
+
+            <!-- DJ 按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_dj"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:minHeight="64dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="DJ"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:strokeColor="@color/primary_purple"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_dj"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_white"
+                app:iconSize="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <!-- 2. 播放控制与音量行 (修改后) -->
+        <!-- 需求：上图标下文字，SeekBar 调整位置 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:focusable="false">
+
+            <!-- 播放控制区 (左侧) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:focusable="false">
+
+                <!-- 暂停/播放 (上图标下文字) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_pause"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Play"
+                    android:textColor="@color/text_white"
+                    android:textSize="10sp"
+                    app:icon="@drawable/ic_play"
+                    app:iconGravity="top"
+                    app:iconPadding="2dp"
+                    app:iconTint="@color/text_white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <!-- 重播 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_replay"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Replay"
+                    android:textColor="@color/text_white"
+                    android:textSize="10sp"
+                    app:icon="@drawable/ic_replay"
+                    app:iconGravity="top"
+                    app:iconPadding="2dp"
+                    app:iconTint="@color/text_white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <!-- 下一曲 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_next"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:textColor="@color/text_white"
+                    android:textSize="10sp"
+                    app:icon="@drawable/ic_next"
+                    app:iconGravity="top"
+                    app:iconPadding="2dp"
+                    app:iconTint="@color/text_white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <!--量减按钮 (上图标下文字) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_volume_down"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vol -"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:cornerRadius="8dp"
+                    app:icon="@drawable/ic_volume_down"
+                    app:iconGravity="top"
+                    app:iconPadding="4dp"
+                    app:iconTint="@color/white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+            </LinearLayout>
+
+            <!-- 中间的 SeekBar 和数值显示 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp">
+
+                <SeekBar
+                    android:id="@+id/seekbar_volume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressTint="#BB86FC"
+                    android:thumbTint="#FFFFFF"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:id="@+id/tv_volume_value"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="50"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+            <!-- 音量控制区 (右侧) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:focusable="false">
+
+                <!-- 3. 音量加按钮 (上图标下文字) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_volume_up"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vol +"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:cornerRadius="8dp"
+                    app:icon="@drawable/ic_volume_up"
+                    app:iconGravity="top"
+                    app:iconPadding="4dp"
+                    app:iconTint="@color/white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <!-- 静音 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mute"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mute"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    app:cornerRadius="8dp"
+                    app:icon="@drawable/ic_volume_off"
+                    app:iconGravity="top"
+                    app:iconPadding="4dp"
+                    app:iconTint="@color/text_white"
+                    app:iconSize="18dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"/>
+
+                <!-- 喜欢 -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:focusable="false">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/favorite_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="82dp"
+                        android:layout_height="64dp"
+                        android:minHeight="64dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="FAVORITES"
+                        android:textColor="@color/text_white"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        app:icon="@drawable/ic_favorite"
+                        app:iconGravity="top"
+                        app:iconPadding="3dp"
+                        app:iconTint="@color/text_white"
+                        app:iconSize="24dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/favorite_count_badge"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_ktv_badge"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                </FrameLayout>
+                <!-- 播放列表-->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:focusable="false">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/playlist_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="82dp"
+                        android:layout_height="64dp"
+                        android:minHeight="64dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="PLAYLIST"
+                        android:textColor="@color/text_white"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        app:icon="@drawable/ic_playlist"
+                        app:iconGravity="top"
+                        app:iconPadding="3dp"
+                        app:iconTint="@color/text_white"
+                        app:iconSize="24dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/playlist_count_badge"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_ktv_badge"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

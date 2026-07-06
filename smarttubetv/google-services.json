@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:431299132531:android:142c1f934017b678cd7e06",
         "android_client_info": {
-          "package_name": "app.smarttube.stable"
+          "package_name": "com.singflow.app"
         }
       },
       "oauth_client": [

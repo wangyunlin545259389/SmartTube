@@ -68,4 +68,7 @@
     <color name="lb_speech_orb_not_recording">@color/orb_color</color>
     <color name="lb_speech_orb_not_recording_pulsed">@color/orb_bright_color</color>
     <color name="lb_speech_orb_not_recording_icon">@color/orb_icon_color</color>
+
+    <color name="default_focus_color">#0787FD</color>
+    <color name="splash_bg">#070321</color>
 </resources>

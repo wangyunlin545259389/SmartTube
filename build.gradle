@@ -14,6 +14,10 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "http://8.149.142.132:8081/repository/releases/"
+            allowInsecureProtocol = true
+        }
         // IntelliJ 'Read timed out' (error 403)
         // https://stackoverflow.com/questions/74258160/is-jcenter-down-permanently-31-oct
         //jcenter()
@@ -32,6 +36,10 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven {
+            url "http://8.149.142.132:8081/repository/releases/"
+            allowInsecureProtocol = true
+        }
         //flatDir { dirs 'libs' } // include duktape-my to all subprojects
         // IntelliJ 'Read timed out' (error 403)
         // https://stackoverflow.com/questions/74258160/is-jcenter-down-permanently-31-oct

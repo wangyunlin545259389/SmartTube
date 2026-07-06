@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/playlist_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="86dp"
+    android:weightSum="10"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:background="@drawable/bg_playlist_item"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:clickable="true"
+    android:descendantFocusability="afterDescendants">
+
+    <!-- 歌曲序号 -->
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="04"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:focusable="false" />
+
+    <!-- 歌曲封面 -->
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop"
+        android:background="#22000000"
+        android:focusable="false" />
+
+    <!-- 歌曲名字 / 作者 -->
+    <LinearLayout
+        android:id="@+id/info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:focusable="false">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Linkin Park - Numb (Karaoke)"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="BlurryFox"
+            android:textColor="#D6D0F0"
+            android:textSize="10sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:focusable="false" />
+    </LinearLayout>
+
+    <!-- 时长 -->
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="54dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="3:07"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:focusable="false" />
+
+    <!-- 置顶 -->
+    <ImageButton
+        android:id="@+id/btn_pin_top"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/bg_playlist_icon_button"
+        android:src="@drawable/ic_arrow_upward"
+        android:padding="2dp"
+        android:scaleType="centerInside"
+        android:nextFocusRight="@id/btn_delete"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:clickable="true" />
+
+    <!-- 删除 -->
+    <ImageButton
+        android:id="@+id/btn_delete"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/bg_playlist_icon_button"
+        android:src="@drawable/ic_delete"
+        android:padding="2dp"
+        android:scaleType="centerInside"
+        android:nextFocusLeft="@id/btn_pin_top"
+        android:nextFocusRight="@id/btn_favorite"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:clickable="true" />
+
+    <!-- 收藏 -->
+    <ImageButton
+        android:id="@+id/btn_favorite"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/bg_playlist_icon_button"
+        android:src="@drawable/ic_favorite_border"
+        android:padding="2dp"
+        android:scaleType="centerInside"
+        android:nextFocusLeft="@id/btn_delete"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:clickable="true" />
+
+</LinearLayout>

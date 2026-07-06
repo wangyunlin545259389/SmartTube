@@ -37,6 +37,7 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
     private static final String TAG = EmbedPlayerView.class.getSimpleName();
     public static final int QUALITY_LOW = 0;
     public static final int QUALITY_NORMAL = 1;
+    public static final int QUALITY_HIGH = 2;
     private SimpleExoPlayer mPlayer;
     private ExoPlayerInitializer mPlayerInitializer;
     private ExoPlayerController mExoPlayerController;
@@ -47,6 +48,23 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
     private final Runnable mStopPlayback = this::finish;
     private int mQuality;
     private float mPercentWatched;
+    /** 下一次打开视频时是否强制从 0 开始播放。 */
+    private boolean mForceStartFromBeginning = false;
+
+    /** 下一次打开视频后需要跳转到的位置。-1 表示不处理。 */
+    private long mPendingStartPositionMs = -1L;
+
+    /** pending seek 重试次数。 */
+    private int mPendingStartSeekAttempts = 0;
+
+    private static final int PENDING_START_SEEK_MAX_ATTEMPTS = 20;
+
+    private final Runnable mApplyPendingStartPositionRunnable = new Runnable() {
+        @Override
+        public void run() {
+            applyPendingStartPosition();
+        }
+    };
 
     public EmbedPlayerView(Context context) {
         super(context);
@@ -193,7 +211,7 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
 
     @Override
     public void showProgressBar(boolean show) {
-        
+
     }
 
     @Override
@@ -487,7 +505,7 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
 
     @Override
     public void setVideoGravity(int gravity) {
-        
+
     }
 
     @Override
@@ -507,6 +525,61 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
         openVideo(Video.from(videoId));
     }
 
+    /**
+     * 从头播放视频。
+     *
+     * KTV 场景使用这个方法，避免 SmartTube 按历史播放进度续播。
+     */
+    public void openVideoFromStart(@Nullable Video video) {
+        if (video == null) {
+            return;
+        }
+
+        mForceStartFromBeginning = true;
+        mPendingStartPositionMs = 0L;
+        mPendingStartSeekAttempts = 0;
+
+        // 关键：清掉 Video 自带的观看进度，避免 PlaybackPresenter 恢复上次进度。
+        video.percentWatched = 0;
+        video.pendingPosMs = 0;
+        openVideo(video);
+    }
+    /**
+     * 从指定位置播放视频。
+     *
+     * 用于网络断开后恢复播放。
+     */
+    public void openVideoAt(@Nullable Video video, long positionMs) {
+        if (video == null) {
+            return;
+        }
+
+        long safePositionMs = Math.max(0L, positionMs);
+
+        mForceStartFromBeginning = false;
+        mPendingStartPositionMs = safePositionMs;
+        mPendingStartSeekAttempts = 0;
+
+        // PlaybackPresenter / VideoLoaderController 里会读取这个字段。
+        video.pendingPosMs = safePositionMs;
+
+        openVideo(video);
+    }
+
+    /**
+     * 强制重建播放器，并从指定位置恢复播放。
+     *
+     * 断网后 ExoPlayer 可能已经进入错误状态。
+     * 这种情况下只 openVideoAt 不够，必须先 release 再重新打开。
+     */
+    public void reopenVideoAt(@Nullable Video video, long positionMs) {
+        if (video == null) {
+            return;
+        }
+
+        finish();
+        openVideoAt(video, positionMs);
+    }
     public void openVideo(@Nullable Video video) {
         if (video == null) {
             return;
@@ -522,8 +595,13 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
         if (view == null || view instanceof EmbedPlayerView || (!mPlaybackPresenter.isEngineInitialized() && getViewManager().getTopView() != PlaybackView.class)) {
             initPlayer();
             createPlayerObjects();
+
+            if (mForceStartFromBeginning) {
+                video.percentWatched = 0;
+            }
+
             mPlaybackPresenter.onNewVideo(video);
-            mPercentWatched = video.percentWatched;
+            mPercentWatched = mForceStartFromBeginning ? 0 : video.percentWatched;
         }
     }
 
@@ -539,7 +617,8 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
         mExoPlayerController.setOnVideoLoaded(this::onVideoLoaded);
         mPlaybackPresenter.onViewInitialized(); // init all controllers
 
-        setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM); // Fix unfilled borders
+//        setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM); // Fix unfilled borders
+        setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
     }
 
     private void createPlayerObjects() {
@@ -558,7 +637,17 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
         //mPlayer.setRepeatMode(Player.REPEAT_MODE_ONE);
 
         mExoPlayerController.setPlayer(mPlayer);
-        mExoPlayerController.selectFormat(mQuality == QUALITY_LOW ? FormatItem.VIDEO_SUB_SD_AVC_30 : FormatItem.VIDEO_SD_AVC_30);
+        switch (mQuality) {
+            case QUALITY_LOW:
+                mExoPlayerController.selectFormat(FormatItem.VIDEO_SD_AVC_30);
+                break;
+            case QUALITY_NORMAL:
+                mExoPlayerController.selectFormat(FormatItem.VIDEO_HD_AVC_30);
+                break;
+            case QUALITY_HIGH:
+                mExoPlayerController.selectFormat(FormatItem.VIDEO_FHD_AVC_60);
+                break;
+        }
         // Don't use subs! Not efficient. High cpu load. Cause input lags.
         mExoPlayerController.selectFormat(FormatItem.SUBTITLE_NONE);
         if (mIsMute) {
@@ -574,6 +663,7 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
         if (isEngineInitialized()) {
             Utils.removeCallbacks(mShowView);
             Utils.removeCallbacks(mStopPlayback);
+            Utils.removeCallbacks(mApplyPendingStartPositionRunnable);
             // Don't replace main player!
             if (mPlaybackPresenter.getView() == null || mPlaybackPresenter.getView() == this) {
                 mPlaybackPresenter.onEngineReleased();
@@ -605,11 +695,62 @@ public class EmbedPlayerView extends PlayerView implements PlaybackView {
     private void onVideoLoaded() {
         // Fix the screen becomes black for a moment
         Utils.postDelayed(mShowView, 1_000);
+
+        if (mPendingStartPositionMs >= 0) {
+            scheduleApplyPendingStartPosition(300);
+        }
+
         if (mIsMute) { // Save bandwidth if the previews are muted
             Utils.postDelayed(mStopPlayback, 5 * 60 * 1_000);
         }
     }
+    private void scheduleApplyPendingStartPosition(long delayMs) {
+        Utils.removeCallbacks(mApplyPendingStartPositionRunnable);
+        Utils.postDelayed(mApplyPendingStartPositionRunnable, delayMs);
+    }
 
+    private void applyPendingStartPosition() {
+        if (mExoPlayerController == null || mPendingStartPositionMs < 0) {
+            return;
+        }
+
+        long targetPositionMs = Math.max(0L, mPendingStartPositionMs);
+
+        try {
+            mExoPlayerController.setPositionMs(targetPositionMs);
+            mExoPlayerController.setPlayWhenReady(true);
+        } catch (Exception ignored) {
+        }
+
+        long currentPositionMs = -1L;
+
+        try {
+            currentPositionMs = mExoPlayerController.getPositionMs();
+        } catch (Exception ignored) {
+        }
+
+        boolean seekApplied =
+                targetPositionMs == 0L
+                        || currentPositionMs >= targetPositionMs - 1500L;
+
+        if (seekApplied) {
+            mPendingStartPositionMs = -1L;
+            mPendingStartSeekAttempts = 0;
+            mForceStartFromBeginning = false;
+            return;
+        }
+
+        mPendingStartSeekAttempts++;
+
+        if (mPendingStartSeekAttempts <= PENDING_START_SEEK_MAX_ATTEMPTS) {
+            scheduleApplyPendingStartPosition(500);
+            return;
+        }
+
+        mPendingStartPositionMs = -1L;
+        mPendingStartSeekAttempts = 0;
+        mForceStartFromBeginning = false;
+    }
     public void setMute(boolean mute) {
         mIsMute = mute;
 

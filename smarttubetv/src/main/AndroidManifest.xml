@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.liskovsoft.smartyoutubetv2.tv">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.liskovsoft.smartyoutubetv2.tv">
 
     <!-- Shield on Android 11 speech recognizer not working fix? -->
     <!-- https://stackoverflow.com/questions/64319117/speechrecognizer-not-available-when-targeting-android-11 -->
@@ -69,6 +69,7 @@
         <activity
             android:name="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity"
             android:exported="true"
+            android:theme="@style/Theme.Splash"
             android:launchMode="singleInstance"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
             android:screenOrientation="unspecified">
@@ -118,11 +119,12 @@
 
         <!-- Alt app launcher icon -->
         <activity-alias android:label="@string/app_name"
-                        android:icon="@mipmap/app_icon_alt"
-                        android:name="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivityAlt"
-                        android:exported="true"
-                        android:enabled="false"
-                        android:targetActivity="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity">
+            android:icon="@mipmap/app_icon_alt"
+            android:theme="@style/Theme.Splash"
+            android:name="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivityAlt"
+            android:exported="true"
+            android:enabled="false"
+            android:targetActivity="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.MAIN" />
@@ -135,12 +137,12 @@
         <!-- screenOrientation="behind" is important too. This fix crashes on Android 8 (api 26) and above, except few devices. -->
         <!-- More info about behind: https://stackoverflow.com/a/52426009/1279056 -->
         <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.AppDialogActivity"
-                  android:noHistory="true"
-                  android:excludeFromRecents="true"
-                  android:launchMode="singleInstance"
-                  android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-                  android:screenOrientation="unspecified"
-                  android:theme="@style/App.Theme.Leanback.Preferences"/>
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
+            android:screenOrientation="unspecified"
+            android:theme="@style/App.Theme.Leanback.Preferences"/>
 
         <!-- Android 8 fallback -->
         <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.AppDialogActivityOpaque"
@@ -180,6 +182,24 @@
             android:screenOrientation="unspecified"
             android:showWhenLocked="true"
             android:theme="@style/App.Theme.Leanback.Player"/>
+        <!--        音浪唱响  未来音乐唱歌界面-->
+        <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.search.KTVActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
+            android:exported="false"/>
+
+        <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.search.AuthActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+        </activity>
+
+        <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.main.update.UpdateCheckActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+        </activity>
 
         <activity
             android:name="com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.SearchTagsActivity"
@@ -188,16 +208,16 @@
             android:screenOrientation="unspecified"/>
 
         <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.signin.SignInActivity"
-                  android:launchMode="singleInstance"
-                  android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-                  android:screenOrientation="unspecified"
-                  android:theme="@style/App.Theme.Leanback.GuidedStep"/>
+            android:launchMode="singleInstance"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
+            android:screenOrientation="unspecified"
+            android:theme="@style/App.Theme.Leanback.GuidedStep"/>
 
         <activity android:name="com.liskovsoft.smartyoutubetv2.tv.ui.adddevice.AddDeviceActivity"
-                  android:launchMode="singleInstance"
-                  android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-                  android:screenOrientation="unspecified"
-                  android:theme="@style/App.Theme.Leanback.GuidedStep"/>
+            android:launchMode="singleInstance"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
+            android:screenOrientation="unspecified"
+            android:theme="@style/App.Theme.Leanback.GuidedStep"/>
 
         <activity
             android:name="com.liskovsoft.smartyoutubetv2.tv.ui.webbrowser.WebBrowserActivity"
@@ -298,6 +318,10 @@
             android:screenOrientation="unspecified"/>
 
         <!-- END Launchers -->
+
+        <meta-data
+            android:name="APP_START_EVENT_ID"
+            android:value="0x0ca4" />
     </application>
 
 </manifest>

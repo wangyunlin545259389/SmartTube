@@ -5,6 +5,10 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
+        maven {
+            url "http://8.149.142.132:8081/repository/releases/"
+            allowInsecureProtocol = true
+        }
     }
 
     dependencies {
@@ -51,10 +55,10 @@ android {
     buildToolsVersion project.properties.buildToolsVersion
     testOptions.unitTests.includeAndroidResources = true
     ndkVersion "21.0.6113669" // reduce size of the *.so files (stripping debug symbols)
-    
+
     defaultConfig {
         // values linked with applicationId: searchable.searchSuggestAuthority, searchable.searchSuggestIntentData, VideoContract.CONTENT_AUTHORITY
-        applicationId "app.smarttube"
+        applicationId "com.singflow.app"
         minSdkVersion project.properties.minSdkVersion
         targetSdkVersion project.properties.targetSdkVersion
         versionCode 2388
@@ -98,7 +102,7 @@ android {
             }
         }
     }
-    
+
     buildTypes {
         release {
             // Enable minification
@@ -123,7 +127,7 @@ android {
     // https://stackoverflow.com/questions/18332474/how-to-set-versionname-in-apk-filename-using-gradle
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def project = "SmartTube"
+            def project = "SingFlow"
             def flavor = variant.productFlavors[-1].name.substring(2) // remove st prefix
             def buildType = variant.buildType.name.take(1)
             def version = variant.versionName
@@ -164,7 +168,7 @@ android {
             targetSdkVersion project.properties.compileSdkVersion
         }
         ststable {
-            applicationId "org.smarttube.stable"
+            applicationId "com.singflow.app"
             targetSdkVersion project.properties.compileSdkVersion
         }
         stfdroid {
@@ -230,7 +234,7 @@ dependencies {
 
     implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
     implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
-
+    implementation 'com.google.android.material:material:' + materialVersion
     // Add the Firebase Crashlytics SDK.
 
     stbetaImplementation('com.google.firebase:firebase-crashlytics:' + firebaseCrashlyticsVersion) {
@@ -247,4 +251,8 @@ dependencies {
 
     // ByeByeDPI fix
     implementation 'org.conscrypt:conscrypt-android:' + conscryptVersion
+
+    implementation 'com.linkin.base:base:1.06.70'
+    implementation 'com.linkin.ui:ui:1.01.96'
+    annotationProcessor 'com.tencent.tinker:tinker-android-anno:1.9.13.2'
 }

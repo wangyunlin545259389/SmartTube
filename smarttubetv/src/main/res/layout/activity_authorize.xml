@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ProgressBar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/auth_requesting"
+            android:textColor="#ffffff"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_dialog"
+        android:layout_width="640dp"
+        android:layout_height="360dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_dialog_frame"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingMultiplier="1.1"
+            android:text="@string/auth_warn"
+            android:textColor="@android:color/white"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginTop="6px"
+            android:gravity="center"
+            android:textColor="#e1e1e1"
+            android:textSize="30sp" />
+
+        <View
+            android:layout_width="500dp"
+            android:layout_height="1px"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="#85ffffff" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_retry"
+                android:layout_width="220dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_dialog_btn"
+                android:gravity="center"
+                android:text="@string/retry"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_stb_info"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</FrameLayout>

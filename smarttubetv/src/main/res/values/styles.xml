@@ -248,4 +248,41 @@
         <item name="cardSelectedBackground">@color/card_selected_background_white_grey</item>
     </style>
     <!--  End Color scheme: Dark Blue (OLED)  -->
+
+    <style name="KtvAlbumTopRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <!--        需要cornerSizeTopLeft的值为42才有明显效果-->
+        <item name="cornerSizeTopLeft">6dp</item>
+        <item name="cornerSizeTopRight">6dp</item>
+
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+
+    <!--    &lt;!&ndash; 闪屏专用主题，只负责预览窗口的背景 &ndash;&gt;-->
+    <!--    <style name="Theme.Splash" parent="Theme.AppCompat.Light.NoActionBar">-->
+    <!--        &lt;!&ndash; 核心：设置启动时显示的图片 &ndash;&gt;-->
+    <!--        <item name="android:windowBackground">@drawable/splash_background</item>-->
+    <!--        <item name="android:windowFullscreen">true</item> &lt;!&ndash; 可选，沉浸感 &ndash;&gt;-->
+    <!--    </style>-->
+
+    <style name="Theme.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">false</item>
+
+        <item name="android:windowAnimationStyle">@style/SplashNoAnimation</item>
+    </style>
+
+    <style name="SplashNoAnimation">
+        <item name="android:activityOpenEnterAnimation">@anim/none</item>
+        <item name="android:activityOpenExitAnimation">@anim/none</item>
+        <item name="android:activityCloseEnterAnimation">@anim/none</item>
+        <item name="android:activityCloseExitAnimation">@anim/none</item>
+    </style>
 </resources>

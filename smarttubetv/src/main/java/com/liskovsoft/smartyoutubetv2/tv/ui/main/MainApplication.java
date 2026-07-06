@@ -1,9 +1,12 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.main;
 
+import android.content.Context;
 import android.os.Build.VERSION;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.linkin.base.app.BaseApplicationHelper;
+import com.linkin.tvlayout.LayoutRadio;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter;
@@ -12,6 +15,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.views.AppDialogView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ChannelUploadsView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ChannelView;
+import com.liskovsoft.smartyoutubetv2.common.app.views.KTVView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.PlaybackView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.SearchView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.SignInView;
@@ -29,6 +33,7 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.channeluploads.ChannelUploadsActivit
 import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.AppDialogActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.AppDialogActivityOpaque;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.PlaybackActivity;
+import com.liskovsoft.smartyoutubetv2.tv.ui.search.KTVActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.SearchTagsActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.signin.SignInActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.webbrowser.WebBrowserActivity;
@@ -39,7 +44,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.security.Provider;
 import java.security.Security;
 
-public class MainApplication extends MultiDexApplication { // fix: Didn't find class "com.google.firebase.provider.FirebaseInitProvider"
+public class MainApplication  extends MyBaseApplication { // fix: Didn't find class "com.google.firebase.provider.FirebaseInitProvider"
+    private static Context sContext;
+
     static {
         // fix youtube bandwidth throttling (best - false)???
         // false is better for streams (less buffering)
@@ -55,7 +62,10 @@ public class MainApplication extends MultiDexApplication { // fix: Didn't find c
     @Override
     public void onCreate() {
         super.onCreate();
-
+        com.vsoontech.tvlayout.LayoutRadio.initRadio(this, 1920, 1080);
+        com.vsoontech.ui.tvlayout.LayoutRadio.initRadio(this, 1920, 1080);
+        LayoutRadio.initRadio(this, 1920, 1080);
+        sContext = getApplicationContext();
         // ByeByeDPI fix
         // https://android-review.googlesource.com/c/platform/external/conscrypt/+/89408/
         // NOTE: Android 10+ (API 29+) uses system Conscrypt TLS; custom Security providers are unnecessary
@@ -98,10 +108,12 @@ public class MainApplication extends MultiDexApplication { // fix: Didn't find c
             dialogClazz = AppDialogActivity.class;
         }
 
-        viewManager.setRoot(BrowseActivity.class);
+//        viewManager.setRoot(BrowseActivity.class);
+        viewManager.setRoot(KTVActivity.class);
+        viewManager.register(KTVView.class, KTVActivity.class);
         viewManager.register(SplashView.class, SplashActivity.class); // no parent, because it's root activity
         viewManager.register(BrowseView.class, BrowseActivity.class); // no parent, because it's root activity
-        viewManager.register(PlaybackView.class, PlaybackActivity.class, BrowseActivity.class);
+        viewManager.register(PlaybackView.class, PlaybackActivity.class, KTVActivity.class);
         viewManager.register(AppDialogView.class, dialogClazz, BrowseActivity.class);
         viewManager.register(SearchView.class, SearchTagsActivity.class, BrowseActivity.class);
         viewManager.register(SignInView.class, SignInActivity.class, BrowseActivity.class);
@@ -183,5 +195,10 @@ public class MainApplication extends MultiDexApplication { // fix: Didn't find c
                 }
             }
         }
+    }
+
+    @Override
+    public BaseApplicationHelper initApplicationListener() {
+        return new MainApplicationHelper();
     }
 }

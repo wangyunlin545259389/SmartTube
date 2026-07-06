@@ -66,7 +66,7 @@ public class ExoPlayerController implements Player.EventListener {
 
         mMediaSourceFactory.setTrackErrorFixer(mTrackErrorFixer);
         mEventListener = eventListener;
-        
+
         applyShield720pFix();
         VideoTrack.sIsAltPresetsEnabled = playerTweaksData.isAltPresetsEnabled();
         MediaTrack.setAvcOverVp9Preferred(playerTweaksData.isAvcOverVp9Preferred());
@@ -145,8 +145,15 @@ public class ExoPlayerController implements Player.EventListener {
      * (e.g. 302200 when duration is 302000).
      */
     public void setPositionMs(long positionMs) {
-        // Url list videos at load stage has undefined (-1) length. So, we need to remove length check.
-        if (mPlayer != null && positionMs >= 0 && positionMs <= getDurationMs()) {
+        if (mPlayer == null || positionMs < 0) {
+            return;
+        }
+
+        long durationMs = getDurationMs();
+
+        // durationMs 可能暂时是 -1。
+        // 这种情况下也允许 seek，否则网络恢复后 reopen + seek 很容易失败。
+        if (durationMs < 0 || positionMs <= durationMs) {
             mPlayer.seekTo(positionMs);
         }
     }
@@ -177,11 +184,11 @@ public class ExoPlayerController implements Player.EventListener {
     public boolean isPlaying() {
         return ExoUtils.isPlaying(mPlayer);
     }
-    
+
     public boolean isLoading() {
         return ExoUtils.isLoading(mPlayer);
     }
-    
+
     public boolean containsMedia() {
         if (mPlayer == null) {
             return false;
@@ -189,7 +196,7 @@ public class ExoPlayerController implements Player.EventListener {
 
         return mPlayer.getPlaybackState() != Player.STATE_IDLE;
     }
-    
+
     public void release() {
         mTrackSelectorManager.release();
         mMediaSourceFactory.release();
@@ -198,7 +205,7 @@ public class ExoPlayerController implements Player.EventListener {
         // Don't destroy it (needed inside the bridge)!
         //mEventListener = null;
     }
-    
+
     public void setPlayer(SimpleExoPlayer player) {
         mPlayer = player;
         player.addListener(this);
@@ -208,11 +215,11 @@ public class ExoPlayerController implements Player.EventListener {
     //public void setEventListener(PlayerEventListener eventListener) {
     //    mEventListener = eventListener;
     //}
-    
+
     public void setPlayerView(PlayerView playerView) {
         mPlayerView = playerView;
     }
-    
+
     public void setTrackSelector(DefaultTrackSelector trackSelector) {
         mTrackSelectorManager.setTrackSelector(trackSelector);
 
@@ -223,27 +230,27 @@ public class ExoPlayerController implements Player.EventListener {
             }
         }
     }
-    
+
     public void setVideo(Video video) {
         mVideo = new WeakReference<>(video);
     }
-    
+
     public Video getVideo() {
         return mVideo != null ? mVideo.get() : null;
     }
-    
+
     public List<FormatItem> getVideoFormats() {
         return ExoFormatItem.from(mTrackSelectorManager.getVideoTracks());
     }
-    
+
     public List<FormatItem> getAudioFormats() {
         return ExoFormatItem.from(mTrackSelectorManager.getAudioTracks());
     }
-    
+
     public List<FormatItem> getSubtitleFormats() {
         return ExoFormatItem.from(mTrackSelectorManager.getSubtitleTracks());
     }
-    
+
     public void selectFormat(FormatItem formatItem) {
         if (formatItem != null && formatItem.getTrack() != null) {
             FormatItem selectedFormatItem = getSelectedFormat(formatItem.getTrack().rendererIndex);
@@ -294,7 +301,7 @@ public class ExoPlayerController implements Player.EventListener {
                 mTrackFormatter.setFormat(format);
             }
         }
-        
+
         setQualityInfo(mTrackFormatter.getQualityLabel());
 
         // Manage audio focus. E.g. use Spotify when audio is disabled. (NOT NEEDED!!!)
@@ -420,7 +427,7 @@ public class ExoPlayerController implements Player.EventListener {
             //applyVolumeBoost(volume);
         }
     }
-    
+
     public float getVolume() {
         if (mPlayer != null) {
             return mPlayer.getVolume();
@@ -439,7 +446,7 @@ public class ExoPlayerController implements Player.EventListener {
             mPlayer.stop(true);
         }
     }
-    
+
     public void setOnVideoLoaded(Runnable onVideoLoaded) {
         mOnVideoLoaded = onVideoLoaded;
     }
@@ -467,7 +474,7 @@ public class ExoPlayerController implements Player.EventListener {
             mPlayer.addAudioListener(mVolumeBooster);
         }
     }
-    
+
     private boolean contains51Audio() {
         if (mTrackSelectorManager == null || mTrackSelectorManager.getAudioTracks() == null) {
             return false;

@@ -81,7 +81,7 @@ public class PlaybackPresenter extends BasePresenter<PlaybackView> implements Pl
     @Override
     public void onViewInitialized() {
         super.onViewInitialized();
-        
+
         initControllers();
     }
 
@@ -127,7 +127,16 @@ public class PlaybackPresenter extends BasePresenter<PlaybackView> implements Pl
         getViewManager().startView(PlaybackView.class);
         mIsEmbedPlayerStarted = false;
     }
+    public void openVideoInCurrentView(Video video) {
+        if (video == null) {
+            return;
+        }
 
+        onNewVideo(video);
+
+        // 标记当前是在已存在的播放器 View 中播放，不启动 PlaybackActivity
+        mIsEmbedPlayerStarted = true;
+    }
     public Video getVideo() {
         return mVideo != null ? mVideo.get() : null;
     }
