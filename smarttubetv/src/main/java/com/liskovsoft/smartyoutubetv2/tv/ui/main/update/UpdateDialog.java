@@ -14,6 +14,7 @@ import com.linkin.base.version.bean.AppVInfo;
 import com.linkin.base.version.listener.VListener;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.main.auth.comm.SPKey;
+import com.liskovsoft.smartyoutubetv2.tv.util.PackageUtils2;
 import com.liskovsoft.smartyoutubetv2.tv.util.SharedPrefs;
 
 
@@ -58,7 +59,7 @@ public class UpdateDialog extends AlertDialog {
 
             @Override
             public void onSucceed(String filePath) {
-                PackageUtils.install(activity, filePath);
+                PackageUtils2.installNormal(activity, filePath);
             }
 
             @Override

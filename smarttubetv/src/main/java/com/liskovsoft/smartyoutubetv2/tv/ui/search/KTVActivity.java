@@ -522,9 +522,9 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lb_ktv_fragment);
-//        if (!AuthorizeManager.getInstance(this).isAuth() ) { //
-//            startAuth();
-//        }
+        if (!AuthorizeManager.getInstance(this).isAuth() ) { //
+            startAuth();
+        }
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -2749,7 +2749,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
     private void submitSearchFromInput() {
         String text = etSearch != null ? etSearch.getText().toString().trim() : "";
         if (TextUtils.isEmpty(text)) {
-            text = "刘德华";
+            text = "";
         }
 
         hideKeyboard();
@@ -3184,7 +3184,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         }
         updateSavedButtonState();
         lastSearchVideos.clear();
-        String cleanText = TextUtils.isEmpty(searchText) ? "刘德华" : searchText.trim();
+        String cleanText = TextUtils.isEmpty(searchText) ? "" : searchText.trim();
         String finalQuery = buildSearchQuery(cleanText);
 //        String finalQuery = cleanText;
         Log.i("wyltest", "finalQuery = " + finalQuery);
@@ -3878,8 +3878,6 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
      */
     private void stopKtvPlayer(boolean removeView) {
         stopKtvBufferMonitor();
-
-        showKtvPlayerLoading(false);
 
         showKtvPlayerLoading(false);
         if (ktvEmbedPlayer == null) {
