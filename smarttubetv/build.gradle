@@ -61,8 +61,8 @@ android {
         applicationId "com.singflow.app"
         minSdkVersion project.properties.minSdkVersion
         targetSdkVersion project.properties.targetSdkVersion
-        versionCode 2388
-        versionName "31.98"
+        versionCode 2395
+        versionName "32.05"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
 
