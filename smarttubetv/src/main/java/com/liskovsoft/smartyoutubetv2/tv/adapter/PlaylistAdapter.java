@@ -422,6 +422,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         Glide.with(context.getApplicationContext())
                 .load(url)
+                .placeholder(R.drawable.placeholder_album)
+                .error(R.drawable.placeholder_album)
                 .apply(ViewUtil.glideOptions())
                 .into(imageView);
     }

@@ -37,6 +37,14 @@ public class AuthActivity extends AppCompatActivity {
     private AuthorizeManager mAuthorizeManager;
     public static boolean isStart;
 
+    private enum AuthState {
+        CHECKING,
+        SUCCESS,
+        FAILED
+    }
+
+    private AuthState authState = AuthState.CHECKING;
+
     TextView tvTip;
     TextView tvInfo;
     TextView tvStbInfo;
@@ -72,18 +80,45 @@ public class AuthActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_CODE);
-        super.onBackPressed();
-        System.exit(0);
-        Process.killProcess(Process.myPid());
+        switch (authState) {
+            case FAILED:
+            case CHECKING:
+                exitEntireApplication();
+                break;
+
+            case SUCCESS:
+            default:
+                super.onBackPressed();
+                break;
+        }
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        System.exit(0);
-        Process.killProcess(Process.myPid());
+    private void exitEntireApplication() {
+        setResult(RESULT_CANCELED);
+
+        Log.w(TAG, "exitEntireApplication:"
+                + " taskId=" + getTaskId()
+                + ", isTaskRoot=" + isTaskRoot()
+                + ", pid=" + Process.myPid());
+
+        try {
+            if (android.os.Build.VERSION.SDK_INT
+                    >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                finishAndRemoveTask();
+            } else {
+                finishAffinity();
+            }
+        } finally {
+            Process.killProcess(Process.myPid());
+        }
     }
+
+//    @Override
+//    public void finish() {
+//        super.finish();
+////        System.exit(0);
+////        Process.killProcess(Process.myPid());
+//    }
 
     private void initView() {
         tvTip = (TextView) findViewById(R.id.tv_tip);
@@ -122,9 +157,11 @@ public class AuthActivity extends AppCompatActivity {
         String omodel = mAuthorizeManager.getOmodel();
         String vendorID = mAuthorizeManager.getVendorID();
         if (StringUtils.isEmpty(omodel) || StringUtils.isEmpty(vendorID)) {
+            authState = AuthState.FAILED;
             showErrorCode(ERROR_EMPTY);
             return;
         }
+        authState = AuthState.CHECKING;
         doRequest();
     }
 
@@ -137,13 +174,16 @@ public class AuthActivity extends AppCompatActivity {
             public void onHttpSuccess(String s, Object o) {
                 AuthorizeResult mAuthorizeResult = (AuthorizeResult) o;
                 if (mAuthorizeResult.getCode() > 0) {
+                    authState = AuthState.FAILED;
                     showErrorCode(mAuthorizeResult.getCode());
                 } else {
                     mAuthorizeManager.setResult(mAuthorizeResult);
                     if (mAuthorizeManager.isAuth()) {
+                        authState = AuthState.SUCCESS;
                         setResult(RESULT_CODE);
                         finish();
                     } else {
+                        authState = AuthState.FAILED;
                         showErrorCode(mAuthorizeResult.getCode());
                     }
                 }
@@ -151,6 +191,7 @@ public class AuthActivity extends AppCompatActivity {
 
             @Override
             public void onHttpError(String taskId, int statusCode, HttpError error) {
+                authState = AuthState.FAILED;
                 showErrorCode(statusCode);
             }
 

@@ -504,16 +504,16 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
 //        UpdateCheckActivity.startCheck(this);
         UpdateCheckActivity updateCheckActivity = new UpdateCheckActivity();
         updateCheckActivity.startCheck(this);
-        Log.i("KTVActivity", "onStart=" + hasStartAuth.get() + ":" + hasResultAuth.get());
-        if (hasStartAuth.get()) {
-            if (hasResultAuth.get()) {
-                if (!AuthorizeManager.getInstance(this).isAuth()) {
-                    finish();
-                }
-            } else {
-                hasResultAuth.set(true);
-            }
-        }
+//        Log.i("KTVActivity", "onStart=" + hasStartAuth.get() + ":" + hasResultAuth.get());
+//        if (hasStartAuth.get()) {
+//            if (hasResultAuth.get()) {
+//                if (!AuthorizeManager.getInstance(this).isAuth()) {
+//                    finish();
+//                }
+//            } else {
+//                hasResultAuth.set(true);
+//            }
+//        }
     }
     /**
      * 页面入口。负责绑定 View、初始化播放器容器、列表、搜索框、按钮、音量等模块。
@@ -551,9 +551,33 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         // 延迟一下，避免 RecyclerView / Adapter 还没完成初始化。
         uiHandler.postDelayed(this::tryStartPlaylistPlaybackIfNeeded, 800);
     }
-    protected void startAuth() {
-        hasStartAuth.set(true);
-        startActivityForResult(new Intent(this, AuthActivity.class), AuthActivity.REQUEST_LICE_COE);
+    private void startAuth() {
+        startActivityForResult(
+                new Intent(this, AuthActivity.class),
+                AuthActivity.REQUEST_LICE_COE
+        );
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data
+    ) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != AuthActivity.REQUEST_LICE_COE) {
+            return;
+        }
+
+        if (resultCode == RESULT_OK
+                && AuthorizeManager.getInstance(this).isAuth()) {
+            Log.i(TAG, "Authorization succeeded");
+            return;
+        }
+
+        Log.w(TAG, "Authorization failed or canceled");
+        finish();
     }
     /**
      * 控制搜索列表的加载提示。
@@ -2747,14 +2771,13 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
 
     /** 读取搜索框内容并发起搜索；空搜索词使用默认歌手。 */
     private void submitSearchFromInput() {
-        String text = etSearch != null ? etSearch.getText().toString().trim() : "";
-        if (TextUtils.isEmpty(text)) {
-            text = "";
-        }
+        String text = getCurrentSearchInput();
 
         hideKeyboard();
 
-        if (listMode != ListMode.SEARCH && text.equals(baseSearchText) && !lastSearchVideos.isEmpty()) {
+        if (listMode != ListMode.SEARCH
+                && text.equals(baseSearchText)
+                && !lastSearchVideos.isEmpty()) {
             returnToSearchResults();
             return;
         }
@@ -2814,16 +2837,33 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
 
     /** 切换搜索分类并重新搜索。 */
     private void switchSearchMode(SearchMode mode) {
-        if (listMode != ListMode.SEARCH && searchMode == mode) {
+        String inputText = getCurrentSearchInput();
+
+        // 只有在搜索框内容没有变化时，才直接返回原搜索结果
+        if (listMode != ListMode.SEARCH
+                && searchMode == mode
+                && inputText.equals(baseSearchText)
+                && !lastSearchVideos.isEmpty()) {
             returnToSearchResults();
             return;
         }
 
+        baseSearchText = inputText;
         searchMode = mode;
+
         updateCategoryButtonState();
+        hideKeyboard();
+
         loadMySearchResult(baseSearchText);
     }
+    /** 获取搜索框当前文本。 */
+    private String getCurrentSearchInput() {
+        if (etSearch == null || etSearch.getText() == null) {
+            return "";
+        }
 
+        return etSearch.getText().toString().trim();
+    }
     private void updateCategoryButtonState() {
         updateCategoryButton(btnKaraoke, searchMode == SearchMode.KARAOKE);
         updateCategoryButton(btnAll, searchMode == SearchMode.ALL);
@@ -3317,7 +3357,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
                 return base + " dj mix";
             case ALL:
             default:
-                return base;
+                return base + " song";
         }
     }
 
