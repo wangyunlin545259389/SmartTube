@@ -120,6 +120,7 @@
                 android:scaleType="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:visibility="gone"
                 android:clickable="true" />
 
             <ImageButton
@@ -134,6 +135,7 @@
                 android:scaleType="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:visibility="gone"
                 android:clickable="true" />
 
             <TextView
@@ -143,7 +145,7 @@
                 android:layout_marginStart="18dp"
                 android:text="20:30"
                 android:textColor="@color/text_white"
-                android:textSize="20sp"
+                android:textSize="32sp"
                 android:fontFamily="sans"
                 android:focusable="false" />
         </LinearLayout>
@@ -377,13 +379,12 @@
         android:layout_gravity="bottom"
         android:focusable="false">
 
-        <!-- 1. 分类按钮行 (修改后) -->
-        <!-- 需求：左右边距，左图右文 -->
+        <!-- 1. 分类按钮行 -->
         <LinearLayout
             android:id="@+id/category_layout"
             android:layout_width="match_parent"
-            android:weightSum="5"
             android:layout_height="86dp"
+            android:weightSum="5"
             android:orientation="horizontal"
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
@@ -392,7 +393,6 @@
             android:clipToPadding="false"
             android:focusable="false">
 
-            <!-- Karaoke 按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_karaoke"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -421,7 +421,6 @@
                 android:focusableInTouchMode="false"
                 android:clickable="true" />
 
-            <!-- All 按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_all"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -448,10 +447,8 @@
                 app:iconSize="24dp"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
-                android:clickable="true"/>
+                android:clickable="true" />
 
-
-            <!-- Official 按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_official"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -480,8 +477,6 @@
                 android:focusableInTouchMode="false"
                 android:clickable="true" />
 
-
-            <!-- Remix 按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_remix"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -510,8 +505,6 @@
                 android:focusableInTouchMode="false"
                 android:clickable="true" />
 
-
-            <!-- DJ 按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dj"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -538,29 +531,27 @@
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:clickable="true" />
+
         </LinearLayout>
 
-        <!-- 2. 播放控制与音量行 (修改后) -->
-        <!-- 需求：上图标下文字，SeekBar 调整位置 -->
+        <!-- 2. 播放/音量控制行 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
             android:focusable="false">
 
-            <!-- 播放控制区 (左侧) -->
+            <!-- 左边固定宽度：Play / Replay / Next / Vol- -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:focusable="false">
 
-                <!-- 暂停/播放 (上图标下文字) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pause"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -576,9 +567,8 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
-                <!-- 重播 -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_replay"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -594,9 +584,8 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
-                <!-- 下一曲 -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_next"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -612,9 +601,8 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
-                <!--量减按钮 (上图标下文字) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_volume_down"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -631,18 +619,19 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
+
             </LinearLayout>
 
-            <!-- 中间的 SeekBar 和数值显示 -->
+            <!-- 中间：SeekBar 自动占满剩余空间 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp">
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <SeekBar
                     android:id="@+id/seekbar_volume"
@@ -655,29 +644,32 @@
                     android:thumbTint="#FFFFFF"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
+                <!-- 防止 11/15 这种文字自动换行 -->
                 <TextView
                     android:id="@+id/tv_volume_value"
-                    android:layout_width="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="56dp"
                     android:gravity="center"
+                    android:singleLine="true"
+                    android:maxLines="1"
                     android:text="50"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
+
             </LinearLayout>
 
-
-            <!-- 音量控制区 (右侧) -->
+            <!-- 右边固定宽度：Vol+ / Mute / Favorite / Playlist -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:gravity="end|center_vertical"
+                android:paddingEnd="12dp"
                 android:focusable="false">
 
-                <!-- 3. 音量加按钮 (上图标下文字) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_volume_up"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -694,9 +686,8 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
-                <!-- 静音 -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_mute"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -713,9 +704,9 @@
                     app:iconSize="18dp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
-                <!-- 喜欢 -->
+                <!-- Favorites -->
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -763,7 +754,8 @@
                         android:clickable="false" />
 
                 </FrameLayout>
-                <!-- 播放列表-->
+
+                <!-- Playlist -->
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -811,7 +803,10 @@
                         android:clickable="false" />
 
                 </FrameLayout>
+
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 </FrameLayout>
