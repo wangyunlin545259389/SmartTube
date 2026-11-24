@@ -377,7 +377,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
     private static final int VIDEO_MENU_RIGHT_MARGIN_DP = 4;
     private static final int VIDEO_MENU_TOP_BOTTOM_MARGIN_DP = 4;
     private static final long VIDEO_MENU_AUTO_DISMISS_MS = 50_000L;
-
+    private static final int SONG_GRID_SPAN_COUNT = 3;
     private final Runnable videoMenuAutoDismissRunnable = new Runnable() {
         @Override
         public void run() {
@@ -1473,7 +1473,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         songResultList.setItemViewCacheSize(24);
         songResultList.setHasFixedSize(true);
 
-        songResultList.setLayoutManager(new GridLayoutManager(this, 4));
+        applySearchGridLayout();
 
         ktvAdapter = new KtvAdapter(this, new ArrayList<>());
 
@@ -3216,7 +3216,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         listMode = ListMode.SEARCH;
 
         if (songResultList != null) {
-            songResultList.setLayoutManager(new GridLayoutManager(this, 4));
+            applySearchGridLayout();
         }
 
         if (songResultList != null && ktvAdapter != null) {
@@ -3548,8 +3548,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         updateSavedButtonState();
 
         if (songResultList != null) {
-            songResultList.setLayoutManager(new GridLayoutManager(this, 4));
-
+            applySearchGridLayout();
             if (ktvAdapter != null) {
                 songResultList.setAdapter(ktvAdapter);
             }
@@ -5261,7 +5260,7 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         showSearchLoading(false);
 
         if (songResultList != null) {
-            songResultList.setLayoutManager(new GridLayoutManager(this, 4));
+            applySearchGridLayout();
         }
 
         if (songResultList != null && ktvAdapter != null) {
@@ -5848,6 +5847,33 @@ public class KTVActivity extends LeanbackActivity implements KTVView {
         ktvPendingNetworkRecovery = false;
         ktvPendingRecoveryVideo = null;
         ktvPendingRecoveryPositionMs = 0L;
+    }
+
+    private void applySearchGridLayout() {
+        if (songResultList == null) {
+            return;
+        }
+
+        RecyclerView.LayoutManager current =
+                songResultList.getLayoutManager();
+
+        if (current instanceof GridLayoutManager) {
+            GridLayoutManager grid =
+                    (GridLayoutManager) current;
+
+            if (grid.getSpanCount() == SONG_GRID_SPAN_COUNT) {
+                return;
+            }
+        }
+
+        songResultList.setLayoutManager(
+                new GridLayoutManager(
+                        this,
+                        SONG_GRID_SPAN_COUNT,
+                        RecyclerView.VERTICAL,
+                        false
+                )
+        );
     }
 
 }
